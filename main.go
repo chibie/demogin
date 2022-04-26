@@ -1,6 +1,7 @@
 package main
 
 import (
+	"demogin/controllers"
 	"demogin/models"
 	"net/http"
 
@@ -15,6 +16,8 @@ func main() {
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"data": "hello world"})
 	})
+
+	r.GET("/books", controllers.FindBooks) // new
 
 	r.Run()
 }
