@@ -48,6 +48,15 @@ func FindBook(c *gin.Context) { // Get model if exist
 	c.JSON(http.StatusOK, gin.H{"data": book})
 }
 
+// GET /books
+// Get all books
+func FindBooks(c *gin.Context) {
+	var books []models.Book
+	models.DB.Find(&books)
+
+	c.JSON(http.StatusOK, gin.H{"data": books})
+}
+
 // PATCH /books/:id
 // Update a book
 func UpdateBook(c *gin.Context) {
@@ -70,11 +79,17 @@ func UpdateBook(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": book})
 }
 
-// GET /books
-// Get all books
-func FindBooks(c *gin.Context) {
-	var books []models.Book
-	models.DB.Find(&books)
+// DELETE /books/:id
+// Delete a book
+func DeleteBook(c *gin.Context) {
+	// Get model if exist
+	var book models.Book
+	if err := models.DB.Where("id = ?", c.Param("id")).First(&book).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		return
+	}
 
-	c.JSON(http.StatusOK, gin.H{"data": books})
+	models.DB.Delete(&book)
+
+	c.JSON(http.StatusOK, gin.H{"data": true})
 }
